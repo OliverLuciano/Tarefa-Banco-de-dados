@@ -1,24 +1,25 @@
-const DispositivoServices = require("../services/dispositivoServices");
+const UsuarioServices = require("../services/usuarioServices");
 
 module.exports = {
     show: async(req, res)=>{
         let json = {error:" ",result:[]}
-        let dispositivos = await DispositivoServices.buscarTodos()
-        for(let i in dispositivos){
+        let usuarios = await UsuarioServices.buscarTodos()
+        for(let i in usuarios){
             json.result.push({
-                id: dispositivos[i].idDispositivo,
-                nome: dispositivos[i].Nome,
-                Tipo: dispositivos[i].Tipo
+                id: usuarios[i].id,
+                nome: usuarios[i].Nome,
+                Data_de_nascimento: usuarios[i].Data_de_nascimento,
+                email: usuarios[i].email
             })
         }
         res.json(json)
     },
     cadastro: async (req,res) => {
         let json = {error:" ",result:{}}
-        let {id, nome, tipo} = req.body
-        if(id && nome && tipo){
-            await DispositivoServices.cadastraDispositivo(id, nome, tipo)
-            json.result = {nome, tipo}  
+        let {Pessoa_ID,Email} = req.body
+        if(Pessoa_ID && Email){
+            await UsuarioServices.cadastrarUsuario(Pessoa_ID, Email,Regiao_idRegiao = 1)
+            json.result = {Pessoa_ID, Email}  
             return res.json(json.result)
         }
         else{
@@ -28,11 +29,10 @@ module.exports = {
     update: async(req, res) => {
         let json = {error:" ",result:{}}
         let {id} = req.params
-        let {nome, tipo} = req.body
-        if(nome && tipo && id){
-            console.log(`${nome}, ${tipo}, ${id}`)
-            await DispositivoServices.updateDispositivo(id, nome, tipo)
-            json.result = {nome, tipo}  
+        let {Email} = req.body
+        if(Email && id){
+            await UsuarioServices.updateUsuario(id, Email)
+            json.result = {Email}  
             return res.json(json.result)
         }
         else{
@@ -43,7 +43,7 @@ module.exports = {
     delete: async(req,res) =>{
         let json = {error:" ",result:{}}
         const {id} = req.params
-        await DispositivoServices.deletaDispositivo(id);
+        await UsuarioServices.deletaUsuario(id);
         res.json(json)
     }
 }
